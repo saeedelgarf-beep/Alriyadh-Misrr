@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peerage New Cairo - Units & Payment Plans Console</title>
+
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-main: #020817;
+      --bg-elevated: rgba(15,23,42,0.9);
+      --bg-glass: rgba(17,24,39,0.86);
+      --border-subtle: rgba(148,163,253,0.12);
+      --border-strong: rgba(148,163,253,0.28);
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+      --accent-gold: #f59e0b;
+      --accent-gold-soft: #d4af37;
+      --accent-soft: rgba(148,163,253,0.5);
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 22px 80px rgba(15,23,42,0.65);
+      --font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.26s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(245,158,11,0.05), transparent 55%),
+        radial-gradient(circle at top right, rgba(148,163,253,0.04), transparent 55%),
+        radial-gradient(circle at bottom, rgba(17,24,39,0.95), #020817);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background layer */
+    .animated-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(245,158,11,0.03), transparent 60%),
+        radial-gradient(circle at 100% 0%, rgba(79,70,229,0.05), transparent 60%),
+        radial-gradient(circle at 0% 100%, rgba(15,23,42,0.85), transparent 70%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    /* Container wraps all main content */
+    .container {
+      position: relative;
+      z-index: 5;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 18px 24px 32px;
+    }
+
+    /* Header / top nav */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      margin: -8px -24px 18px;
+      padding: 10px 24px 12px;
+      backdrop-filter: blur(18px);
+      background: radial-gradient(circle at top left, rgba(245,158,11,0.12), transparent 70%)
+                  ,rgba(2,6,23,0.94);
+      border-bottom: 1px solid rgba(148,163,253,0.12);
+      box-shadow: 0 14px 40px rgba(15,23,42,0.85);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      height: 68px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 22px rgba(0,0,0,0.8));
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f9fafb;
+    }
+
+    .header-title span {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .header-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 9.5px;
+      border: 1px solid rgba(156,163,175,0.28);
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(14px);
+      background: radial-gradient(circle at top left, rgba(148,163,253,0.16), transparent 70%)
+                  ,rgba(9,9,11,0.88);
+    }
+
+    .badge-primary {
+      border-color: rgba(79,70,229,0.7);
+      color: #e5e7eb;
+    }
+
+    .badge-gold {
+      border-color: rgba(245,158,11,0.9);
+      color: var(--accent-gold);
+    }
+
+    /* Stats row */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin: 12px 0 22px;
+    }
+
+    .stat-card {
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: radial-gradient(circle at top left, rgba(245,158,11,0.06), transparent 80%)
+                  ,rgba(9,12,23,0.9);
+      border: 1px solid rgba(148,163,253,0.16);
+      box-shadow: 0 14px 40px rgba(15,23,42,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .stat-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: #f9fafb;
+    }
+
+    .stat-value span {
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    /* Main layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0,2.1fr) minmax(360px,1.6fr);
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .card {
+      padding: 16px 16px 14px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+                    145deg,
+                    rgba(15,23,42,0.98),
+                    rgba(15,23,42,0.9)
+                 );
+      background-blend-mode: screen;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(22px);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 26px 80px rgba(15,23,42,0.9);
+      border-color: rgba(245,158,11,0.22);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #f9fafb;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .status-badge-live {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 9px;
+      border: 1px solid rgba(22,163,74,0.8);
+      color: #bbf7d0;
+      background: rgba(22,163,74,0.16);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .card-sub {
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,253,0.28);
+      font-size: 9.5px;
+      color: var(--accent-gold);
+      background: radial-gradient(circle at top left, rgba(245,158,11,0.18), transparent 80%)
+                  ,rgba(9,9,11,0.92);
+    }
+
+    .note {
+      font-size: 9.8px;
+      color: var(--text-sub);
+      margin-top: 6px;
+    }
+
+    /* Table styling */
+    .table-container {
+      margin-top: 4px;
+    }
+
+    .table-wrapper {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(75,85,99,0.7);
+      background: radial-gradient(circle at top, rgba(148,163,253,0.06), transparent 80%)
+                  ,rgba(9,9,11,0.98);
+    }
+
+    .table-scroll {
+      max-height: 440px;
+      overflow-y: auto;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,253,0.6) transparent;
+    }
+
+    .table-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+
+    .table-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148,163,253,0.5);
+      border-radius: 999px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 9px 8px;
+      background: linear-gradient(to right, rgba(9,9,11,0.98), rgba(15,23,42,0.98));
+      border-bottom: 1px solid rgba(75,85,99,0.9);
+      font-weight: 500;
+      color: #9ca3af;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 9px;
+      backdrop-filter: blur(18px);
+    }
+
+    tbody td {
+      padding: 9px 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(31,41,55,0.9);
+      background: transparent;
+      color: var(--text-main);
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: radial-gradient(circle at left, rgba(15,23,42,0.46), transparent 120%);
+    }
+
+    tbody tr:hover td {
+      background: radial-gradient(circle at top, rgba(245,158,11,0.08), rgba(15,23,42,0.96));
+      color: #f9fafb;
+      box-shadow: 0 14px 40px rgba(15,23,42,0.95);
+      transform: translateY(-1px);
+      cursor: pointer;
+    }
+
+    .status-badge {
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 9px;
+      border: 1px solid rgba(22,163,74,0.9);
+      color: #bbf7d0;
+      background: rgba(22,163,74,0.16);
+    }
+
+    .unit-label {
+      padding: 2px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(148,163,253,0.5);
+      font-size: 9px;
+      color: var(--accent-gold);
+      background: rgba(9,9,11,0.96);
+    }
+
+    /* Selected unit card */
+    .selected-unit-card {
+      margin-bottom: 12px;
+      padding: 10px 10px 8px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(75,85,99,0.9);
+      background: radial-gradient(circle at top left, rgba(148,163,253,0.16), transparent 100%)
+                  ,rgba(6,8,20,0.98);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 18px 50px rgba(15,23,42,0.9);
+    }
+
+    .selected-unit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .selected-unit-header-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #f9fafb;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .selected-unit-header span {
+      font-size: 9px;
+      color: var(--text-sub);
+    }
+
+    .unit-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px 12px;
+    }
+
+    .info-label {
+      font-size: 9px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .info-value {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent-gold);
+    }
+
+    /* Input / calculator */
+    .garage-price {
+      margin-top: 2px;
+      padding: 8px 9px;
+      border-radius: 12px;
+      border: 1px dashed rgba(148,163,253,0.45);
+      background: rgba(9,9,11,0.98);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+
+    .garage-price strong {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .input-group {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .input-group label {
+      font-size: 10px;
+      color: var(--accent-gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(75,85,99,0.85);
+      background: radial-gradient(circle at top, rgba(17,24,39,0.96), rgba(9,9,11,0.98));
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .input-group input::placeholder {
+      color: rgba(148,163,253,0.4);
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.15), 0 18px 50px rgba(15,23,42,0.9);
+      transform: translateY(-1px);
+    }
+
+    /* Results */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .result-box {
+      padding: 8px 9px 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: radial-gradient(circle at top, rgba(17,24,39,0.96), rgba(6,8,20,0.98));
+      color: var(--text-sub);
+      font-size: 9.5px;
+      min-height: 52px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .result-box strong {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-gold);
+    }
+
+    .result-box .small-note {
+      font-size: 8px;
+      color: var(--text-sub);
+    }
+
+    .result-box:hover {
+      border-color: rgba(245,158,11,0.32);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.9);
+      transform: translateY(-1px);
+    }
+
+    .result-box.error {
+      border-color: rgba(248,113,113,0.9);
+      background: radial-gradient(circle at top, rgba(127,29,29,0.92), rgba(17,24,39,1));
+      color: #fecaca;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-main);
+      transition: all var(--transition-med);
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b, #d4af37);
+      color: #0f172a;
+      box-shadow: 0 18px 45px rgba(245,158,11,0.35);
+      border-color: rgba(212,175,55,0.9);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 24px 70px rgba(245,158,11,0.55);
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #fbbf24, #e5c66b);
+    }
+
+    .btn-ghost {
+      background: rgba(9,9,11,0.9);
+      border-color: rgba(148,163,253,0.4);
+      color: var(--accent-gold);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(17,24,39,0.98);
+      box-shadow: 0 16px 46px rgba(15,23,42,0.85);
+      transform: translateY(-1px);
+    }
+
+    /* Schedule full-width */
+    #schedule-wrapper {
+      max-width: 1440px;
+      margin: 18px auto 0;
+      padding: 0 24px 8px;
+      display: none;
+    }
+
+    #schedule-container {
+      padding: 14px 14px 10px;
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at top, rgba(148,163,253,0.16), transparent 100%)
+                  ,rgba(6,8,20,0.98);
+      border: 1px solid rgba(75,85,99,0.95);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(20px);
+    }
+
+    #schedule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    #schedule-header h3 {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+    }
+
+    #schedule-meta {
+      font-size: 8.5px;
+      color: var(--text-sub);
+      text-align: right;
+    }
+
+    #unified-schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9px;
+      color: var(--text-main);
+    }
+
+    #unified-schedule-table th {
+      background: rgba(9,9,11,0.98);
+      color: #9ca3af;
+      padding: 4px 3px;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border-bottom: 1px solid rgba(75,85,99,0.9);
+    }
+
+    #unified-schedule-table td {
+      padding: 3px 3px;
+      border-bottom: 1px solid rgba(31,41,55,0.9);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .quarterly-row {
+      background: radial-gradient(circle at top, rgba(245,158,11,0.12), transparent 160%);
+      font-weight: 600;
+      color: var(--accent-gold);
+    }
+
+    .schedule-scroll {
+      max-height: 260px;
+      overflow-y: auto;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,253,0.6) transparent;
+    }
+
+    .schedule-scroll::-webkit-scrollbar {
+      height: 5px;
+      width: 5px;
+    }
+
+    .schedule-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148,163,253,0.6);
+      border-radius: 999px;
+    }
+
+    /* Responsive */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 960px) {
+      .header {
+        margin: 0 -12px 14px;
+        padding: 10px 14px 12px;
+      }
+      .container {
+        padding: 14px 14px 26px;
+      }
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-badges {
+        align-items: flex-start;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      #schedule-wrapper {
+        padding: 0 14px 10px;
+      }
+      .card {
+        animation: fadeInUp 0.3s ease-out;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="animated-bg"></div>
+
+<div class="container">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="peerage-logo.png" alt="Peerage Logo" class="logo" />
+        <div class="header-title">
+          <h1>PEERAGE NEW CAIRO</h1>
+          <span>Units &amp; Payment Plans Console</span>
+        </div>
+      </div>
+      <div class="header-badges">
+        <div class="badge-row">
+          <div class="badge badge-primary">INTERNAL SALES TOOL</div>
+          <div class="badge badge-gold">BLACK &amp; GOLD INTERFACE</div>
+        </div>
+        <div>Fully Finished: 11 • Delivery: Dec 2029 • Min 60% before handover</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Lowest fully finished</div>
+      <div class="stat-value"><span>3,460,000</span> EGP</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Highest penthouse</div>
+      <div class="stat-value"><span>17,352,000</span> EGP</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Parking slot added</div>
+      <div class="stat-value"><span>300,000</span> EGP</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Export format</div>
+      <div class="stat-value">Offer as <span>English PDF</span></div>
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <section class="main-grid">
+    <!-- LEFT: UNITS TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            Available Fully Finished Inventory
+            <span class="status-badge-live">Live</span>
+          </div>
+          <div class="card-sub">Click a unit row to push its details to the right panel.</div>
+        </div>
+        <div class="pill">Snapshot view</div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-wrapper">
+          <div class="table-scroll">
+            <table>
+              <thead>
+              <tr>
+                <th>Delivery</th>
+                <th>Status</th>
+                <th>Unit Price (EGP)</th>
+                <th>View</th>
+                <th>Area (m²)</th>
+                <th>Type</th>
+                <th>Floor</th>
+                <th>Building</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr onclick="selectUnit('A1','G5','Apartment',169,'Front Corner',11115000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>11,115,000</td>
+                <td>Front Corner</td>
+                <td>169</td>
+                <td>Apartment</td>
+                <td>G5</td>
+                <td>A1</td>
+              </tr>
+              <tr onclick="selectUnit('A2','G4','Apartment',127,'Back',7920000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>7,920,000</td>
+                <td>Back</td>
+                <td>127</td>
+                <td>Apartment</td>
+                <td>G4</td>
+                <td>A2</td>
+              </tr>
+              <tr onclick="selectUnit('A2','G5','Apartment',127,'Back',7920000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>7,920,000</td>
+                <td>Back</td>
+                <td>127</td>
+                <td>Apartment</td>
+                <td>G5</td>
+                <td>A2</td>
+              </tr>
+              <tr onclick="selectUnit('A9','G4','Apartment',176,'Front',11388000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>11,388,000</td>
+                <td>Front</td>
+                <td>176</td>
+                <td>Apartment</td>
+                <td>G4</td>
+                <td>A9</td>
+              </tr>
+              <tr onclick="selectUnit('B8','G4','Apartment',184,'Front Corner',11892000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>11,892,000</td>
+                <td>Front Corner</td>
+                <td>184</td>
+                <td>Apartment</td>
+                <td>G4</td>
+                <td>B8</td>
+              </tr>
+              <tr onclick="selectUnit('B8','G2','Apartment',184,'Front Corner',11892000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>11,892,000</td>
+                <td>Front Corner</td>
+                <td>184</td>
+                <td>Apartment</td>
+                <td>G2</td>
+                <td>B8</td>
+              </tr>
+              <tr onclick="selectUnit('C4','G1','Apartment',130,'Back',8100000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>8,100,000</td>
+                <td>Back</td>
+                <td>130</td>
+                <td>Apartment</td>
+                <td>G1</td>
+                <td>C4</td>
+              </tr>
+              <tr onclick="selectUnit('C7','G5','Apartment',130,'Back',8100000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>8,100,000</td>
+                <td>Back</td>
+                <td>130</td>
+                <td>Apartment</td>
+                <td>G5</td>
+                <td>C7</td>
+              </tr>
+              <tr onclick="selectUnit('C7','LG','Studio',46,'Back',3460000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>3,460,000</td>
+                <td>Back</td>
+                <td>46</td>
+                <td><span class="unit-label">Studio</span></td>
+                <td>LG</td>
+                <td>C7</td>
+              </tr>
+              <tr onclick="selectUnit('E10','G2','Apartment',178,'Front Corner',11514000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>11,514,000</td>
+                <td>Front Corner</td>
+                <td>178</td>
+                <td>Apartment</td>
+                <td>G2</td>
+                <td>E10</td>
+              </tr>
+              <tr onclick="selectUnit('A2','G5','Penthouse',267,'Front',17352000)">
+                <td>01/12/2029</td>
+                <td><span class="status-badge">Available</span></td>
+                <td>17,352,000</td>
+                <td>Front</td>
+                <td>267</td>
+                <td><span class="unit-label">Penthouse</span></td>
+                <td>G5</td>
+                <td>A2</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        One click on any unit row updates the selected unit snapshot and calculator on the right.
+      </div>
+    </div>
+
+    <!-- RIGHT: SELECTED UNIT + CALCULATOR -->
+    <div class="card">
+      <div class="selected-unit-card" id="selected-unit-card">
+        <div class="selected-unit-header">
+          <div class="selected-unit-header-title">Selected Unit Snapshot</div>
+          <span id="selected-unit-hint">No unit selected – using custom price only.</span>
+        </div>
+        <div class="unit-info-grid">
+          <div>
+            <div class="info-label">Building</div>
+            <div class="info-value" id="su-building">–</div>
+          </div>
+          <div>
+            <div class="info-label">Floor</div>
+            <div class="info-value" id="su-floor">–</div>
+          </div>
+          <div>
+            <div class="info-label">Type</div>
+            <div class="info-value" id="su-type">–</div>
+          </div>
+          <div>
+            <div class="info-label">Area</div>
+            <div class="info-value" id="su-area">–</div>
+          </div>
+          <div>
+            <div class="info-label">View</div>
+            <div class="info-value" id="su-view">–</div>
+          </div>
+          <div>
+            <div class="info-label">Unit price</div>
+            <div class="info-value" id="su-price">–</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="garage-price">
+        <div>Parking slot amount added to the final offer:</div>
+        <div><strong>300,000 EGP</strong></div>
+      </div>
+
+      <div class="input-group">
+        <label for="unit-price">Unit price (EGP) before parking</label>
+        <input
+          type="number"
+          id="unit-price"
+          placeholder="Select a unit or enter a custom price"
+          oninput="calculatePayment()"
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="payment-plan">Payment plan</label>
+        <select id="payment-plan" onchange="calculatePayment()">
+          <option value="0|60|950000">0% down payment – 60 months</option>
+          <option value="5|72|950000">5% down payment – 72 months</option>
+          <option value="10|84|900000">10% down payment – 84 months</option>
+          <option value="10|120|850000">November offer 10% – 120 months (limited)</option>
+          <option value="semi-cash">Semi-cash – 25% discount (50% upfront + 4 quarterly)</option>
+          <option value="cash">Cash – 35% discount (full upfront)</option>
+        </select>
+      </div>
+
+      <div class="results-grid">
+        <div id="down-payment-display" class="result-box">
+          Down payment details will appear here.
+        </div>
+        <div id="installment-display" class="result-box">
+          Monthly / quarterly installments breakdown.
+        </div>
+        <div id="annual-summary-display" class="result-box">
+          Annual installments summary.
+        </div>
+        <div id="total-price-display" class="result-box">
+          Total price including parking.
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="downloadPDF()">
+        Download PDF Offer for Current Unit
+      </button>
+
+      <div class="note">
+        Client must reach at least <strong>60% of total price</strong> before delivery using any approved plan.
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FULL-WIDTH SCHEDULE (kept outside main grid for space) -->
+<div id="schedule-wrapper">
+  <div id="schedule-container">
+    <div id="schedule-header">
+      <h3>INSTALLMENT SCHEDULE</h3>
+      <div id="schedule-meta">
+        Appears only for installment &amp; semi-cash plans. Values are indicative for client presentation.
+      </div>
+    </div>
+    <div class="schedule-scroll">
+      <table id="unified-schedule-table">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Due date</th>
+          <th>Monthly (ref.)</th>
+          <th>Quarterly (actual)</th>
+          <th>Type</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+  const GARAGE_PRICE = 300000;
+  const TODAY = new Date();
+  let selectedUnit = null;
+
+  function formatEGP(num) {
+    if (isNaN(num)) return "--";
+    return num.toLocaleString("en-EG", { maximumFractionDigits: 0 }) + " EGP";
+  }
+
+  function selectUnit(building, floor, type, area, view, price) {
+    selectedUnit = { building, floor, type, area, view, price };
+
+    document.getElementById("su-building").textContent = building;
+    document.getElementById("su-floor").textContent = floor;
+    document.getElementById("su-type").textContent = type;
+    document.getElementById("su-area").textContent = area + " m²";
+    document.getElementById("su-view").textContent = view;
+    document.getElementById("su-price").textContent = formatEGP(price);
+    document.getElementById("selected-unit-hint").textContent = "Unit loaded from inventory.";
+
+    const input = document.getElementById("unit-price");
+    input.value = price;
+    calculatePayment();
+  }
+
+  function calculatePayment() {
+    const unitPrice = parseFloat(document.getElementById("unit-price").value);
+    const selectedPlan = document.getElementById("payment-plan").value;
+
+    const downBox = document.getElementById("down-payment-display");
+    const instBox = document.getElementById("installment-display");
+    const annualBox = document.getElementById("annual-summary-display");
+    const totalBox = document.getElementById("total-price-display");
+    const scheduleWrapper = document.getElementById("schedule-wrapper");
+
+    scheduleWrapper.style.display = "none";
+    downBox.classList.remove("error");
+
+    if (isNaN(unitPrice) || unitPrice <= 0) {
+      downBox.classList.add("error");
+      downBox.textContent = "Please select a unit or enter a valid unit price.";
+      instBox.textContent = "";
+      annualBox.textContent = "";
+      totalBox.textContent = "";
+      if (!selectedUnit) {
+        document.getElementById("selected-unit-hint").textContent =
+          "No unit selected – using custom price only.";
+      }
+      return;
+    }
+
+    let finalPrice = unitPrice;
+    let down = 0;
+    let monthly = 0;
+    let quarterly = 0;
+    let totalMonths = 0;
+    let hasSchedule = false;
+
+    if (selectedPlan === "cash") {
+      const disc = 0.35;
+      const discAmount = unitPrice * disc;
+      finalPrice = unitPrice - discAmount;
+      down = finalPrice;
+
+      downBox.innerHTML =
+        "Total amount after 35% cash discount:" +
+        "<strong>" + formatEGP(down) + "</strong>";
+      instBox.innerHTML =
+        "No installments." +
+        "<span class='small-note'>Discount value: " + formatEGP(discAmount) + "</span>";
+      annualBox.innerHTML = "Summary: one-time full payment (no schedule).";
+    } else if (selectedPlan === "semi-cash") {
+      const disc = 0.25;
+      const net = unitPrice * (1 - disc);
+      finalPrice = net;
+
+      down = net * 0.5;
+      const remaining = net - down;
+
+      totalMonths = 12;
+      const quarters = 4;
+      quarterly = remaining / quarters;
+      hasSchedule = true;
+
+      downBox.innerHTML =
+        "Upfront (50% of net after 25% discount):" +
+        "<strong>" + formatEGP(down) + "</strong>";
+      instBox.innerHTML =
+        "4 quarterly payments of:" +
+        "<strong>" + formatEGP(quarterly) + "</strong>";
+      annualBox.innerHTML =
+        "Total installments within 12 months:" +
+        "<strong>" + formatEGP(remaining) + "</strong>";
+    } else {
+      const [downPct, months, refRemaining] = selectedPlan.split("|").map(Number);
+      totalMonths = months;
+
+      const baseExample = 1_000_000;
+      const remainingFactor = refRemaining / baseExample;
+
+      down = unitPrice * (downPct / 100);
+      const remaining = unitPrice * remainingFactor;
+
+      monthly = remaining / totalMonths;
+      quarterly = monthly * 3;
+      hasSchedule = true;
+
+      downBox.innerHTML =
+        "Down payment (" + downPct + "% of unit price):" +
+        "<strong>" + formatEGP(down) + "</strong>";
+      const quarters = totalMonths / 3;
+      instBox.innerHTML =
+        "Approx. monthly installment for " + totalMonths + " months:" +
+        "<strong>" + formatEGP(monthly) + "</strong>" +
+        "<span class='small-note'>Or about " + quarters +
+        " quarterly payments of " + formatEGP(quarterly) + ".</span>";
+      const annualSum = monthly * 12;
+      annualBox.innerHTML =
+        "Approx. total installments per year:" +
+        "<strong>" + formatEGP(annualSum) + "</strong>";
+    }
+
+    const totalWithParking = finalPrice + GARAGE_PRICE;
+    totalBox.innerHTML =
+      "Estimated total price (unit + parking):" +
+      "<strong>" + formatEGP(totalWithParking) + "</strong>" +
+      "<span class='small-note'>(Includes " + formatEGP(GARAGE_PRICE) + " parking value)</span>";
+
+    if (hasSchedule && totalMonths > 0) {
+      generateSchedule(totalMonths, monthly, quarterly);
+      scheduleWrapper.style.display = "block";
+      scheduleWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  function generateSchedule(totalMonths, monthly, quarterly) {
+    const tbody = document.querySelector("#unified-schedule-table tbody");
+    tbody.innerHTML = "";
+
+    for (let i = 1; i <= totalMonths; i++) {
+      const row = document.createElement("tr");
+      const date = new Date(TODAY);
+      date.setMonth(TODAY.getMonth() + i);
+      const formatted = date.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+
+      let type = "Monthly (ref.)";
+      let qVal = "--";
+      let mVal = monthly ? formatEGP(monthly) : "--";
+
+      if (i % 3 === 0 && quarterly > 0) {
+        row.classList.add("quarterly-row");
+        type = "Quarterly (actual)";
+        qVal = formatEGP(quarterly);
+      }
+
+      row.innerHTML = `
+        <td>${i}</td>
+        <td>${formatted}</td>
+        <td>${monthly ? mVal : "--"}</td>
+        <td>${qVal}</td>
+        <td>${type}</td>
+      `;
+      tbody.appendChild(row);
+    }
+  }
+
+  function trimLine(text, max) {
+    if (!text) return "";
+    const clean = text.replace(/\s+/g, " ").trim();
+    return clean.length > max ? clean.slice(0, max) + "..." : clean;
+  }
+
+  function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+
+    let y = 16;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text(
+      "Peerage New Cairo - Unit Offer & Payment Plan",
+      105,
+      y,
+      { align: "center" }
+    );
+    y += 7;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text(
+      "Generated by Peerage internal Black & Gold console.",
+      105,
+      y,
+      { align: "center" }
+    );
+    y += 8;
+
+    if (selectedUnit) {
+      doc.setFont("helvetica", "bold");
+      doc.text("Unit information", 15, y);
+      y += 5;
+      doc.setFont("helvetica", "normal");
+      doc.text(`Building: ${selectedUnit.building}`, 18, y);
+      doc.text(`Floor: ${selectedUnit.floor}`, 70, y);
+      doc.text(`Type: ${selectedUnit.type}`, 130, y);
+      y += 5;
+      doc.text(`Area: ${selectedUnit.area} m²`, 18, y);
+      doc.text(`View: ${selectedUnit.view}`, 70, y);
+      doc.text(
+        `Unit price: ${selectedUnit.price.toLocaleString("en-EG")} EGP`,
+        130,
+        y
+      );
+      y += 8;
+    } else {
+      const unitPrice = document.getElementById("unit-price").value || "-";
+      doc.setFont("helvetica", "bold");
+      doc.text("Unit information", 15, y);
+      y += 5;
+      doc.setFont("helvetica", "normal");
+      doc.text(`Entered unit price: ${unitPrice} EGP`, 18, y);
+      y += 8;
+    }
+
+    const planSelect = document.getElementById("payment-plan");
+    const planLabel =
+      planSelect.options[planSelect.selectedIndex].textContent;
+    const down = document.getElementById("down-payment-display").innerText;
+    const inst = document.getElementById("installment-display").innerText;
+    const annual =
+      document.getElementById("annual-summary-display").innerText;
+    const total = document.getElementById("total-price-display").innerText;
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Payment plan details", 15, y);
+    y += 5;
+    doc.setFont("helvetica", "normal");
+    doc.text(`Selected plan: ${planLabel}`, 18, y);
+    y += 5;
+    doc.text(trimLine(down, 110), 18, y);
+    y += 5;
+    doc.text(trimLine(inst, 110), 18, y);
+    y += 5;
+    doc.text(trimLine(annual, 110), 18, y);
+    y += 5;
+    doc.text(trimLine(total, 110), 18, y);
+    y += 8;
+
+    const rows = document.querySelectorAll(
+      "#unified-schedule-table tbody tr"
+    );
+    if (rows.length) {
+      doc.setFont("helvetica", "bold");
+      doc.text("Installment schedule (summary)", 15, y);
+      y += 4;
+
+      doc.setFontSize(7.2);
+      doc.setFont("helvetica", "normal");
+      doc.text("M", 15, y);
+      doc.text("Due date", 22, y);
+      doc.text("Monthly", 63, y);
+      doc.text("Quarterly", 103, y);
+      doc.text("Type", 145, y);
+      y += 3;
+
+      let printed = 0;
+      rows.forEach((tr) => {
+        if (printed >= 26 || y > 275) return;
+        const tds = tr.querySelectorAll("td");
+        if (tds.length >= 5) {
+          doc.text(tds[0].innerText, 15, y);
+          doc.text(tds[1].innerText, 22, y);
+          doc.text(tds[2].innerText || "-", 63, y);
+          doc.text(tds[3].innerText || "-", 103, y);
+          doc.text(tds[4].innerText, 145, y);
+          y += 3;
+          printed++;
+        }
+      });
+    }
+
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      "Values are indicative and subject to official confirmation & company policies. Client must reach 60% before handover.",
+      105,
+      290,
+      { align: "center" }
+    );
+
+    const fileName = selectedUnit
+      ? `Peerage_Offer_${selectedUnit.building}-${selectedUnit.floor}-${selectedUnit.area}m2.pdf`
+      : "Peerage_Offer.pdf";
+
+    doc.save(fileName);
+  }
+
+  window.onload = calculatePayment;
+</script>
+</body>
+</html>
